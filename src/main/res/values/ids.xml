@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="smart_content" type="id"/>
+    <item name="smart_dragger" type="id"/>
+    <item name="smart_view_front" type="id"/>
+    <item name="smart_view_back" type="id"/>
+    <item name="smart_view_bottom" type="id"/>
+</resources>
