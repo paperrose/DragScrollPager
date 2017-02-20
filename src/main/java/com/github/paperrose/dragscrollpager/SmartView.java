@@ -134,12 +134,8 @@ public class SmartView extends RelativeLayout {
                 }
                 FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)dragger.getChildAt(0).getLayoutParams();
                 draggerHeight = lp.height;
+                draggerStatus = draggerHeight;
                 dragger.getChildAt(0).setLayoutParams(lp);
-                LayoutParams lp2 = (LayoutParams) dragger.getLayoutParams();
-                lp2.setMargins(0, -draggerHeight, 0, 0);
-                dragger.setLayoutParams(lp);
-                draggerStatus = 0;
-
             }
         });
         return this;

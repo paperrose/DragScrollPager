@@ -9,5 +9,6 @@ import android.view.ViewGroup;
  */
 public abstract class DragScrollPagerAdapter extends PagerAdapter {
    public abstract View instantiateDragger(ViewGroup container, int position);
+   public abstract View instantiateBottomDragger(ViewGroup container, int position);
    public abstract LoadedView instantiateContent(ViewGroup container, int position);
 }
