@@ -141,6 +141,28 @@ public class SmartView extends RelativeLayout {
         return this;
     }
 
+    public void resizeContent() {
+        ViewTreeObserver vto = contentContainer.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int contentSize = getViewSize(((View)content));
+                if (contentSize == 0) return;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    contentContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                } else {
+                    contentContainer.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                }
+                FrameLayout.LayoutParams contentLp = (FrameLayout.LayoutParams)((View)content).getLayoutParams();
+                contentLp.height = contentSize;
+                ((View)content).setLayoutParams(contentLp);
+            }
+        });
+        FrameLayout.LayoutParams contentLp = (FrameLayout.LayoutParams)((View)content).getLayoutParams();
+        contentLp.height = FrameLayout.LayoutParams.WRAP_CONTENT;
+        ((View)content).setLayoutParams(contentLp);
+    }
+
     public SmartView setContent(LoadedView contentView) {
         if (this.contentContainer.getChildAt(0) != null) {
             this.contentContainer.removeViewAt(0);
