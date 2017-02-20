@@ -112,9 +112,23 @@ public class DragScrollPager extends RelativeLayout implements View.OnTouchListe
                             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                                 @Override
                                 public void onAnimationUpdate(ValueAnimator animation) {
-                                    lastMotion.smartView.setContentTranslationY(lastMotion.smartView.getContentTranslationY() + Math.signum(lastMotion.lastDistance) * (float) animation.getAnimatedValue());
+                                    if (Math.abs(lastMotion.lastDistance) > 2) {
+                                        if (lastMotion.smartView.hitBottom() && (currentItem != pagerAdapter.getCount() - 1) && lastMotion.smartView.getTranslationY() <= 0) {
+                                            smartViewBottom.setTranslationY(lastMotion.smartView.getHeight() +
+                                                    Math.max(-lastMotion.smartView.draggerHeight, lastMotion.smartView.getTranslationY() +
+                                                            Math.signum(lastMotion.lastDistance) * (float) animation.getAnimatedValue()));
+                                            lastMotion.smartView.setTranslationY(Math.max(-lastMotion.smartView.draggerHeight,
+                                                    lastMotion.smartView.getTranslationY() +
+                                                    Math.signum(lastMotion.lastDistance) * (float) animation.getAnimatedValue()));
+                                        } else {
+                                            lastMotion.smartView.setTranslationY(0);
+                                            lastMotion.smartView.setContentTranslationY(lastMotion.smartView.getContentTranslationY() +
+                                                    Math.signum(lastMotion.lastDistance) * (float) animation.getAnimatedValue());
+                                        }
+                                    }
                                 }
                             });
+
                             animator.setDuration(1000);
                             animator.start();
                             break;
@@ -127,6 +141,7 @@ public class DragScrollPager extends RelativeLayout implements View.OnTouchListe
                                     super.onAnimationEnd(animation);
                                 }
                             };
+                            ValueAnimator.AnimatorUpdateListener updateListener = null;
                             if (lastMotion.smartView.collapsed) {
                                 if (currentItem == pagerAdapter.getCount() - 1) {
                                     return true;
@@ -137,12 +152,23 @@ public class DragScrollPager extends RelativeLayout implements View.OnTouchListe
                                         @Override
                                         public void onAnimationEnd(Animator animation) {
                                             super.onAnimationEnd(animation);
+                                            smartViewFront.setTranslationY(0);
+                                            smartViewFront.setContentTranslationY(0);
                                             lastMotion.smartView.collapsed = false;
                                             setNextItem(lastMotion);
                                         }
                                     };
+                                    updateListener = new ValueAnimator.AnimatorUpdateListener() {
+                                        @Override
+                                        public void onAnimationUpdate(ValueAnimator animation) {
+                                            float coeff = (float)(animation.getCurrentPlayTime())/animation.getDuration();
+                                            lastMotion.smartView.setContentTranslationY((1 - coeff)*lastMotion.smartView.draggerHeight);
+                                        }
+                                    };
+
+
                                 } else {
-                                    endY = lastMotion.smartView.getHeight();
+                                    endY = lastMotion.smartView.getHeight() + smartViewFront.getTranslationY();
                                 }
                             } else {
                                 if (currentItem == 0 || !lastMotion.hasMove) {
@@ -172,7 +198,9 @@ public class DragScrollPager extends RelativeLayout implements View.OnTouchListe
                                     lastMotion.smartView.setTranslationY((Float) animation.getAnimatedValue());
                                 }
                             });
-
+                            if (updateListener != null) {
+                                animator.addUpdateListener(updateListener);
+                            }
                             animator.setInterpolator(new DecelerateInterpolator());
                             animator.setDuration((lastMotion.hasMove && lastMotion.velocity != 0 &&
                                     (int) Math.abs(distance / lastMotion.velocity) < 500) ?
