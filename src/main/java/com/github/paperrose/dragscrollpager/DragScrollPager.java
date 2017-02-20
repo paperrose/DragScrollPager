@@ -273,10 +273,12 @@ public class DragScrollPager extends RelativeLayout implements View.OnTouchListe
         if (lastMotion != null)
             smartViewBottom.resetTranslation();
         currentItem++;
+        smartViewFront.setDragger(pagerAdapter.instantiateDragger(this, currentItem));
         if (currentItem != pagerAdapter.getCount() - 1) {
             smartViewBottom.setContent(pagerAdapter.instantiateContent(this, currentItem + 1));
-            smartViewBottom.setDragger(pagerAdapter.instantiateDragger(this, currentItem + 1));
+            smartViewBottom.setDragger(pagerAdapter.instantiateBottomDragger(this, currentItem + 1));
         }
+
     }
 
     private void setPrevItem(MotionItem lastMotion) {
@@ -299,6 +301,7 @@ public class DragScrollPager extends RelativeLayout implements View.OnTouchListe
             smartViewBack.setContent(pagerAdapter.instantiateContent(this, currentItem - 1));
             smartViewBack.setDragger(pagerAdapter.instantiateDragger(this, currentItem - 1));
         }
+        smartViewBottom.setDragger(pagerAdapter.instantiateBottomDragger(this, currentItem + 1));
     }
 
     private int currentItem;
