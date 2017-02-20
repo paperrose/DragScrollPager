@@ -305,9 +305,9 @@ public class DragScrollPager extends RelativeLayout implements View.OnTouchListe
     }
 
     private int currentItem;
-    private SmartView smartViewFront;
-    private SmartView smartViewBack;
-    private SmartView smartViewBottom;
+    public SmartView smartViewFront;
+    public SmartView smartViewBack;
+    public SmartView smartViewBottom;
     private MotionItem currentMotion;
 
     class MotionItem {
