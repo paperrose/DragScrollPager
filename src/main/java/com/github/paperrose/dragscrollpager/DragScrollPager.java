@@ -311,7 +311,6 @@ public class DragScrollPager extends RelativeLayout implements View.OnTouchListe
     private MotionItem currentMotion;
 
     class MotionItem {
-        MotionDirection direction;
         MotionMode motionMode;
         SmartView smartView;
         float align;
@@ -323,10 +322,6 @@ public class DragScrollPager extends RelativeLayout implements View.OnTouchListe
         boolean hasMove;
     }
 
-    private enum MotionDirection {
-        UP,
-        DOWN
-    }
 
     private enum MotionMode {
         SCROLL,
