@@ -146,12 +146,14 @@ public class SmartView extends RelativeLayout {
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                int contentSize = getViewSize(((View)content));
+                int contentSize = getViewSize((View)content);
                 if (contentSize == 0) return;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    contentContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                } else {
-                    contentContainer.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                if (oldContentSize != contentSize) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        contentContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    } else {
+                        contentContainer.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    }
                 }
                 FrameLayout.LayoutParams contentLp = (FrameLayout.LayoutParams)((View)content).getLayoutParams();
                 contentLp.height = contentSize;
@@ -159,9 +161,12 @@ public class SmartView extends RelativeLayout {
             }
         });
         FrameLayout.LayoutParams contentLp = (FrameLayout.LayoutParams)((View)content).getLayoutParams();
+        oldContentSize = contentLp.height;
         contentLp.height = FrameLayout.LayoutParams.WRAP_CONTENT;
         ((View)content).setLayoutParams(contentLp);
     }
+
+    int oldContentSize = 0;
 
     public SmartView setContent(LoadedView contentView) {
         if (this.contentContainer.getChildAt(0) != null) {
