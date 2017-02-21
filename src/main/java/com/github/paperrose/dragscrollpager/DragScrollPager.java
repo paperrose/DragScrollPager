@@ -11,12 +11,24 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.RelativeLayout;
 
+import java.util.ArrayList;
+
 /**
  * Created by Emil.Allakhverdiev on 14.02.2017.
  */
 public class DragScrollPager extends RelativeLayout implements View.OnTouchListener {
     DragScrollPagerAdapter pagerAdapter;
 
+    ArrayList<OnContentTapListener> tapListeners = new ArrayList<>();
+    ArrayList<OnContentScrollListener> scrollListeners = new ArrayList<>();
+
+    public void addOnContentTapListener(OnContentTapListener listener) {
+        tapListeners.add(listener);
+    }
+
+    public void addOnContentScrollListener(OnContentScrollListener listener) {
+        scrollListeners.add(listener);
+    }
 
     public DragScrollPager(Context context) {
         super(context);
@@ -28,6 +40,14 @@ public class DragScrollPager extends RelativeLayout implements View.OnTouchListe
         super(context, attrs);
         setOnTouchListener(touchListener);
         preInit();
+    }
+
+    public interface OnContentTapListener {
+        void onTap();
+    }
+
+    public interface OnContentScrollListener {
+        void onScroll(float distance);
     }
 
     public DragScrollPager(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -90,6 +110,9 @@ public class DragScrollPager extends RelativeLayout implements View.OnTouchListe
                                 } else {
                                     currentMotion.smartView.setTranslationY(0);
                                     currentMotion.smartView.setContentTranslationY(currentMotion.smartView.getContentTranslationY() + distance);
+                                    for (OnContentScrollListener listener : scrollListeners) {
+                                        listener.onScroll(distance);
+                                    }
                                 }
                             }
                             if (currentMotion.smartView.hitTop()) {
@@ -106,7 +129,12 @@ public class DragScrollPager extends RelativeLayout implements View.OnTouchListe
                     currentMotion = null;
                     switch (lastMotion.motionMode) {
                         case SCROLL:
-                            if (!lastMotion.hasMove) break;
+                            if (!lastMotion.hasMove) {
+                                for (OnContentTapListener listener : tapListeners) {
+                                    listener.onTap();
+                                }
+                                break;
+                            }
 
                             animator = ValueAnimator.ofFloat(Math.abs(lastMotion.lastDistance), 0);
                             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
