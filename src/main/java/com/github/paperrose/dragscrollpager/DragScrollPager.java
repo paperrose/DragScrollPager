@@ -115,7 +115,7 @@ public class DragScrollPager extends RelativeLayout implements View.OnTouchListe
                                     }
                                 }
                             }
-                            if (currentMotion.smartView.hitTop()) {
+                            if (currentMotion.smartView.hitTop() && distance > 0) {
                                 currentMotion.motionMode = MotionMode.MOVE;
                                 return true;
                             }
