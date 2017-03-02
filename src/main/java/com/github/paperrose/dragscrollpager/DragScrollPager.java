@@ -342,11 +342,11 @@ public class DragScrollPager extends RelativeLayout implements View.OnTouchListe
         if (currentItem != 0) {
             smartViewBack.setContent(pagerAdapter.instantiateContent(this, currentItem - 1));
             smartViewBack.setDragger(pagerAdapter.instantiateDragger(this, currentItem - 1));
-            if (currentItem == 0) {
-                View draggerView = new View(getContext());
-                draggerView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 1));
-                smartViewFront.setDragger(draggerView);
-            }
+
+        } else {
+            View draggerView = new View(getContext());
+            draggerView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 1));
+            smartViewFront.setDragger(draggerView);
         }
         smartViewBottom.setDragger(pagerAdapter.instantiateBottomDragger(this, currentItem + 1));
     }
