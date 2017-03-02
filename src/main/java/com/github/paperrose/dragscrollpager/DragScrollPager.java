@@ -100,6 +100,11 @@ public class DragScrollPager extends RelativeLayout implements View.OnTouchListe
                             }
                             currentMotion.smartView
                                     .setTranslationYWithLimit(currentMotion.smartView.getTranslationY() + distance);
+                            if (!currentMotion.smartView.collapsed && distance > 0) {
+                                for (OnContentScrollListener listener : scrollListeners) {
+                                    listener.onScroll(distance);
+                                }
+                            }
                             break;
                         case SCROLL:
 
