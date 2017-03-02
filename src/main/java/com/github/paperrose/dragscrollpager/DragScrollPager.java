@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
@@ -58,6 +59,11 @@ public class DragScrollPager extends RelativeLayout implements View.OnTouchListe
 
     public void setCurrentViews(int position) {
         smartViewFront.setDragger(pagerAdapter.instantiateDragger(this, position));
+        if (position == 0) {
+            View draggerView = new View(getContext());
+            draggerView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 1));
+            smartViewFront.setDragger(draggerView);
+        }
         smartViewFront.setContent(pagerAdapter.instantiateContent(this, position));
         if (position < pagerAdapter.getCount() - 1) {
             smartViewBottom.setDragger(pagerAdapter.instantiateBottomDragger(this, position + 1));
@@ -336,6 +342,11 @@ public class DragScrollPager extends RelativeLayout implements View.OnTouchListe
         if (currentItem != 0) {
             smartViewBack.setContent(pagerAdapter.instantiateContent(this, currentItem - 1));
             smartViewBack.setDragger(pagerAdapter.instantiateDragger(this, currentItem - 1));
+            if (currentItem == 0) {
+                View draggerView = new View(getContext());
+                draggerView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 1));
+                smartViewFront.setDragger(draggerView);
+            }
         }
         smartViewBottom.setDragger(pagerAdapter.instantiateBottomDragger(this, currentItem + 1));
     }
