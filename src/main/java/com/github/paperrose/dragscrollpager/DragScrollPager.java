@@ -152,6 +152,9 @@ public class DragScrollPager extends RelativeLayout implements View.OnTouchListe
                                             lastMotion.smartView.setTranslationY(0);
                                             lastMotion.smartView.setContentTranslationY(lastMotion.smartView.getContentTranslationY() +
                                                     Math.signum(lastMotion.lastDistance) * (float) animation.getAnimatedValue());
+                                            for (OnContentScrollListener listener : scrollListeners) {
+                                                listener.onScroll(Math.signum(lastMotion.lastDistance) * (float) animation.getAnimatedValue());
+                                            }
                                         }
                                     }
                                 }
